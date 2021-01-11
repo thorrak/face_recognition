@@ -16,8 +16,8 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 face_detector = dlib.get_frontal_face_detector()
 
-predictor_68_point_model = face_recognition_models.pose_predictor_model_location()
-pose_predictor_68_point = dlib.shape_predictor(predictor_68_point_model)
+# predictor_68_point_model = face_recognition_models.pose_predictor_model_location()
+# pose_predictor_68_point = dlib.shape_predictor(predictor_68_point_model)
 
 predictor_5_point_model = face_recognition_models.pose_predictor_five_point_model_location()
 pose_predictor_5_point = dlib.shape_predictor(predictor_5_point_model)
@@ -151,16 +151,19 @@ def batch_face_locations(images, number_of_times_to_upsample=1, batch_size=128):
     return list(map(convert_cnn_detections_to_css, raw_detections_batched))
 
 
-def _raw_face_landmarks(face_image, face_locations=None, model="large"):
+def _raw_face_landmarks(face_image, face_locations=None, model="small"):
     if face_locations is None:
         face_locations = _raw_face_locations(face_image)
     else:
         face_locations = [_css_to_rect(face_location) for face_location in face_locations]
 
-    pose_predictor = pose_predictor_68_point
 
-    if model == "small":
-        pose_predictor = pose_predictor_5_point
+    if model == "large":
+        raise NotImplementedError
+        # pose_predictor = pose_predictor_68_point
+
+    # if model == "small":
+    pose_predictor = pose_predictor_5_point
 
     return [pose_predictor(face_image, face_location) for face_location in face_locations]
 
